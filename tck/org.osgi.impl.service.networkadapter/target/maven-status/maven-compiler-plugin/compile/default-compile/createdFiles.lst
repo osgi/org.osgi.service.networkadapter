@@ -1,0 +1,10 @@
+org/osgi/impl/service/networkadapter/Activator.class
+org/osgi/impl/service/networkadapter/Commands.class
+org/osgi/impl/service/networkadapter/TestStepImpl.class
+org/osgi/impl/service/networkadapter/NetworkIfManager.class
+org/osgi/impl/service/networkadapter/NetworkIfUtil$1.class
+org/osgi/impl/service/networkadapter/NetworkIfTracker.class
+org/osgi/impl/service/networkadapter/NetworkIfUtil.class
+org/osgi/impl/service/networkadapter/NetworkAddressImpl.class
+org/osgi/impl/service/networkadapter/NetworkIfData.class
+org/osgi/impl/service/networkadapter/NetworkAdapterImpl.class

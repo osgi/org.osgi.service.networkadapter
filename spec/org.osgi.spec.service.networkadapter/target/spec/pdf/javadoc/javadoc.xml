@@ -1,0 +1,772 @@
+<?xml version='1.0' encoding='utf-8'?>
+<top>
+  <package name='org.osgi.service.networkadapter' fqn='org.osgi.service.networkadapter' qn='org.osgi.service.networkadapter'>
+<org.osgi.annotation.versioning.Version><value>1.0</value>
+</org.osgi.annotation.versioning.Version>
+   <lead>
+Network Interface Information Service Specification Package Version 1.0.
+   </lead>
+   <description>
+Network Interface Information Service Specification Package Version 1.0.
+
+ <p>
+ Bundles wishing to use this package must list the package in the
+ Import-Package header of the bundle's manifest. This package has two types of
+ users: the consumers that use the API in this package and the providers that
+ implement the API in this package.
+
+ </p><p>
+ Example import for consumers using the API in this package:
+ </p><p>
+ {@code  Import-Package: org.osgi.service.networkadapter; version="[1.0,2.0)"}
+ </p><p>
+ Example import for providers implementing the API in this package:
+ </p><p>
+ {@code  Import-Package: org.osgi.service.networkadapter; version="[1.0,1.1)"}</p>
+   </description>
+<author>@author $Id: 61dcbdc4e60de7d8cedb48ce57301b35e501a203 $</author>
+  <class name='NetworkAdapter' fqn='org.osgi.service.networkadapter.NetworkAdapter' qn='NetworkAdapter' package='org.osgi.service.networkadapter' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+NetworkAdapter is an interface that provides information about single network
+ interfaces provided by the execution environment.
+   </lead>
+   <description>
+NetworkAdapter is an interface that provides information about single network
+ interfaces provided by the execution environment.
+ 
+ <p>
+ If multiple network interfaces are present, NetworkAdapter Services that
+ correspond to each network interface must be registered. Network interface
+ information service is set the following information as service property.
+ </p><ul>
+ <li>{@link #NETWORKADAPTER_TYPE} : Network Interface Type</li>
+ <li>{@link #NETWORKADAPTER_DISPLAYNAME} : Network Interface Display Name</li>
+ <li>{@link #NETWORKADAPTER_NAME} : Network Interface Name</li>
+ <li>{@link #NETWORKADAPTER_HARDWAREADDRESS} : Hardware Address</li>
+ <li>{@link #NETWORKADAPTER_IS_UP} : Running status of Network Interface</li>
+ <li>{@link #NETWORKADAPTER_IS_LOOPBACK} : To check loopback interface</li>
+ <li>{@link #NETWORKADAPTER_IS_POINTTOPOINT} : To check point to point
+ interface</li>
+ <li>{@link #NETWORKADAPTER_IS_VIRTUAL} : To check virtual interface</li>
+ <li>{@link #NETWORKADAPTER_SUPPORTS_MULTICAST} : To check supports
+ multicasting</li>
+ <li>{@link #NETWORKADAPTER_PARENT} : The PID of parent Network Interface</li>
+ <li>{@link #NETWORKADAPTER_SUBINTERFACE} : The PID of sub Network Interface</li>
+ </ul>
+ <p>
+ When a network interface becomes available, NetworkAdapter service associated
+ with the network interface is registered with the service registry. If the
+ network interface becomes unavailable, the corresponding NetworkAdapter
+ service is unregistered.
+ </p><p>
+ When the attribute values of the network interface are set to the service
+ property changes, NetworkAdapter service is updated. NetworkAdapter interface
+ provides a method corresponding to java.net.NetworkInterface in order to
+ provide information on the associated network interface. However, this
+ interface method does not support the Static method. In addition, because
+ NetworkInterface object or InetAddress object is registered in the service
+ registry as NetworkAdapter and NetworkAddress, the NetworkAdapter interface
+ does not provide a method to get those objects. NetworkAdapter provides a
+ method to retrieve the value of an attribute of a network interface.</p>
+   </description>
+<ThreadSafe></ThreadSafe><author>@author $Id: 07c677445b11954d7cd3aa30a089c737b3ef1783 $</author>
+    <method name='getNetworkAdapterType' fqn='org.osgi.service.networkadapter.NetworkAdapter.getNetworkAdapterType' qn='NetworkAdapter.getNetworkAdapterType()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the network interface type of "networkAdapter.type" service
+ property value.
+   </lead>
+   <description>
+Returns the network interface type of "networkAdapter.type" service
+ property value.
+   </description>
+
+
+<return>Network Interface Type, or null if "networkAdapter.type" service
+         property value is empty.</return>
+
+
+
+     </method>
+    <method name='getDisplayName' fqn='org.osgi.service.networkadapter.NetworkAdapter.getDisplayName' qn='NetworkAdapter.getDisplayName()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the network interface display name of
+ "networkAdapter.displayname" service property value.
+   </lead>
+   <description>
+Returns the network interface display name of
+ "networkAdapter.displayname" service property value.
+   </description>
+
+
+<return>Network Interface display name, or null if
+         "networkAdapter.displayname" service property value is empty.</return>
+
+
+
+     </method>
+    <method name='getName' fqn='org.osgi.service.networkadapter.NetworkAdapter.getName' qn='NetworkAdapter.getName()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the network interface name of "networkAdapter.name" service
+ property value.
+   </lead>
+   <description>
+Returns the network interface name of "networkAdapter.name" service
+ property value.
+   </description>
+
+
+<return>Network Interface Name, or null if "networkAdapter.name" service
+         property value is empty.</return>
+
+
+
+     </method>
+    <method name='getHardwareAddress' fqn='org.osgi.service.networkadapter.NetworkAdapter.getHardwareAddress' qn='NetworkAdapter.getHardwareAddress()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='byte[]' qualifiedTypeName='byte[]' typeArgs='' dimension='[]' signature='()' flatSignature='()'>
+   <lead>
+Returns the MAC address of "networkAdapter.hardwareAddress" service
+ property value.
+   </lead>
+   <description>
+Returns the MAC address of "networkAdapter.hardwareAddress" service
+ property value.
+   </description>
+
+
+<return>Hardware Address, or null if "networkAdapter.hardwareAddress"
+         service property value is empty.</return>
+
+
+
+     </method>
+    <method name='getMTU' fqn='org.osgi.service.networkadapter.NetworkAdapter.getMTU' qn='NetworkAdapter.getMTU()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='int' qualifiedTypeName='int' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the Maximum Transmission Unit (MTU) of this interface.
+   </lead>
+   <description>
+Returns the Maximum Transmission Unit (MTU) of this interface.
+   </description>
+
+
+<return>The value of the MTU for that interface.</return>
+
+<throws name='SocketException'>If an I/O error occurs.</throws>
+
+
+<exception name='SocketException' fqn='java.net.SocketException'/>
+     </method>
+    <method name='isLoopback' fqn='org.osgi.service.networkadapter.NetworkAdapter.isLoopback' qn='NetworkAdapter.isLoopback()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns whether a network interface is a loopback interface.
+   </lead>
+   <description>
+Returns whether a network interface is a loopback interface.
+   </description>
+
+
+<return>true if the interface is a loopback interface.</return>
+
+<throws name='SocketException'>If an I/O error occurs.</throws>
+
+
+<exception name='SocketException' fqn='java.net.SocketException'/>
+     </method>
+    <method name='isPointToPoint' fqn='org.osgi.service.networkadapter.NetworkAdapter.isPointToPoint' qn='NetworkAdapter.isPointToPoint()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns whether a network interface is a point to point interface.
+   </lead>
+   <description>
+Returns whether a network interface is a point to point interface.
+   </description>
+
+
+<return>true if the interface is a point to point interface.</return>
+
+<throws name='SocketException'>If an I/O error occurs.</throws>
+
+
+<exception name='SocketException' fqn='java.net.SocketException'/>
+     </method>
+    <method name='isUp' fqn='org.osgi.service.networkadapter.NetworkAdapter.isUp' qn='NetworkAdapter.isUp()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns whether a network interface is up and running.
+   </lead>
+   <description>
+Returns whether a network interface is up and running.
+   </description>
+
+
+<return>true if the interface is up and running.</return>
+
+<throws name='SocketException'>If an I/O error occurs.</throws>
+
+
+<exception name='SocketException' fqn='java.net.SocketException'/>
+     </method>
+    <method name='isVirtual' fqn='org.osgi.service.networkadapter.NetworkAdapter.isVirtual' qn='NetworkAdapter.isVirtual()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns whether this interface is a virtual interface (also called
+ subinterface).
+   </lead>
+   <description>
+Returns whether this interface is a virtual interface (also called
+ subinterface). Virtual interfaces are, on some systems, interfaces
+ created as a child of a physical interface and given different settings
+ (like address or MTU). Usually the name of the interface will the name of
+ the parent followed by a colon (:) and a number identifying the child
+ since there can be several virtual interfaces attached to a single
+ physical interface.
+   </description>
+
+
+<return>true if this interface is a virtual interface.</return>
+
+
+
+     </method>
+    <method name='supportsMulticast' fqn='org.osgi.service.networkadapter.NetworkAdapter.supportsMulticast' qn='NetworkAdapter.supportsMulticast()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns whether a network interface supports multicasting or not.
+   </lead>
+   <description>
+Returns whether a network interface supports multicasting or not.
+   </description>
+
+
+<return>true if the interface supports Multicasting.</return>
+
+<throws name='SocketException'>If an I/O error occurs.</throws>
+
+
+<exception name='SocketException' fqn='java.net.SocketException'/>
+     </method>
+    <field name='EMPTY_STRING' fqn='org.osgi.service.networkadapter.NetworkAdapter.EMPTY_STRING' qn='NetworkAdapter.EMPTY_STRING' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='""'>
+   <lead>
+The value string of service property, when information is not available.
+   </lead>
+   <description>
+The value string of service property, when information is not available.
+   </description>
+
+     </field>
+    <field name='EMPTY_BYTE_ARRAY' fqn='org.osgi.service.networkadapter.NetworkAdapter.EMPTY_BYTE_ARRAY' qn='NetworkAdapter.EMPTY_BYTE_ARRAY' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='byte[]' qualifiedTypeName='byte[]' dimension='[]'>
+   <lead>
+The value byte array of service property, when information is not
+ available.
+   </lead>
+   <description>
+The value byte array of service property, when information is not
+ available.
+   </description>
+
+     </field>
+    <field name='EMPTY_STRING_ARRAY' fqn='org.osgi.service.networkadapter.NetworkAdapter.EMPTY_STRING_ARRAY' qn='NetworkAdapter.EMPTY_STRING_ARRAY' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String[]' qualifiedTypeName='java.lang.String[]' dimension='[]'>
+   <lead>
+The value string array of service property, when information is not
+ available.
+   </lead>
+   <description>
+The value string array of service property, when information is not
+ available.
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_TYPE' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_TYPE' qn='NetworkAdapter.NETWORKADAPTER_TYPE' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.type"'>
+   <lead>
+The key string of "networkAdapter.type" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.type" service property.
+ <p>
+ Network Interface Type is specified.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_DISPLAYNAME' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_DISPLAYNAME' qn='NetworkAdapter.NETWORKADAPTER_DISPLAYNAME' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.displayName"'>
+   <lead>
+The key string of "networkAdapter.displayName" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.displayName" service property.
+ <p>
+ Network Interface display name is specified. {@link #EMPTY_STRING} if no
+ display name is available.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_NAME' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_NAME' qn='NetworkAdapter.NETWORKADAPTER_NAME' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.name"'>
+   <lead>
+The key string of "networkAdapter.name" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.name" service property.
+ <p>
+ Network Interface Name is specified. {@link #EMPTY_STRING} if no name is
+ available.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_HARDWAREADDRESS' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS' qn='NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.hardwareAddress"'>
+   <lead>
+The key string of "networkAdapter.hardwareAddress" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.hardwareAddress" service property.
+ <p>
+ Hardware Address is specified. {@link #EMPTY_BYTE_ARRAY} if no hardware
+ address is available.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_IS_UP' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_IS_UP' qn='NetworkAdapter.NETWORKADAPTER_IS_UP' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.isUp"'>
+   <lead>
+The key string of "networkAdapter.isUp" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.isUp" service property.
+ <p>
+ The value is true when a network interface is up and running, otherwise
+ it is false.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_IS_LOOPBACK' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK' qn='NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.isLoopback"'>
+   <lead>
+The key string of "networkAdapter.isLoopback" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.isLoopback" service property.
+ <p>
+ The value is true when a network interface is a loopback interface,
+ otherwise it is false.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_IS_POINTTOPOINT' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT' qn='NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.isPointToPoint"'>
+   <lead>
+The key string of "networkAdapter.isPointToPoint" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.isPointToPoint" service property.
+ <p>
+ The value is true when a network interface is a point to point interface,
+ otherwise it is false.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_IS_VIRTUAL' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL' qn='NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.isVirtual"'>
+   <lead>
+The key string of "networkAdapter.isVirtual" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.isVirtual" service property.
+ <p>
+ The value is true when a network interface is a virtual interface,
+ otherwise it is false.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_SUPPORTS_MULTICAST' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST' qn='NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.supportsMulticast"'>
+   <lead>
+The key string of "networkAdapter.supportsMulticast" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.supportsMulticast" service property.
+ <p>
+ The value is true when a network interface supports multicasting,
+ otherwise it is false.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_PARENT' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_PARENT' qn='NetworkAdapter.NETWORKADAPTER_PARENT' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.parent"'>
+   <lead>
+The key string of "networkAdapter.parent" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.parent" service property.
+ <p>
+ Service PID of the NetworkAdapter service which is parent of this
+ NetworkAdapter is specified. {@link #EMPTY_STRING} if no parent is
+ available.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_SUBINTERFACE' fqn='org.osgi.service.networkadapter.NetworkAdapter.NETWORKADAPTER_SUBINTERFACE' qn='NetworkAdapter.NETWORKADAPTER_SUBINTERFACE' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.subInterface"'>
+   <lead>
+The key string of "networkAdapter.subInterface" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.subInterface" service property.
+ <p>
+ Service PID of the NetworkAdapter service which is subinterface of this
+ NetworkAdapter is specified. {@link #EMPTY_STRING_ARRAY} if no
+ subinterface is available.</p>
+   </description>
+
+     </field>
+    <field name='WAN' fqn='org.osgi.service.networkadapter.NetworkAdapter.WAN' qn='NetworkAdapter.WAN' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"WAN"'>
+   <lead>
+The string of network interface type which means the network interface to
+ connect to an external network (i.e.
+   </lead>
+   <description>
+The string of network interface type which means the network interface to
+ connect to an external network (i.e. Internet).
+   </description>
+
+     </field>
+    <field name='LAN' fqn='org.osgi.service.networkadapter.NetworkAdapter.LAN' qn='NetworkAdapter.LAN' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"LAN"'>
+   <lead>
+The string of network interface type which means the network interface to
+ connect to a local area network.
+   </lead>
+   <description>
+The string of network interface type which means the network interface to
+ connect to a local area network.
+   </description>
+
+     </field>
+  </class>
+  <class name='NetworkAddress' fqn='org.osgi.service.networkadapter.NetworkAddress' qn='NetworkAddress' package='org.osgi.service.networkadapter' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+This interface represents an IP address information.
+   </lead>
+   <description>
+This interface represents an IP address information.
+ 
+ <p>
+ NetworkAddress interface provides information of IP addresses available in
+ which execution environment on a Network Interface Information Service bundle
+ is running. IP address information service is set the following information
+ as service property.
+ 
+ </p><ul>
+ <li>{@link #NETWORKADAPTER_TYPE} : Network Interface Type</li>
+ <li>{@link #IPADDRESS_VERSION} : IP Address Version</li>
+ <li>{@link #IPADDRESS_SCOPE} : IP Address Scope</li>
+ <li>{@link #IPADDRESS} : IP Address</li>
+ <li>{@link #SUBNETMASK_LENGTH} : Subnet Mask Length(IPv4) or Prefix
+ Length(IPv6)</li>
+ <li>{@link #NETWORKADAPTER_PID} : Service PID of the NetworkAdapter service
+ to which this service belongs</li>
+ </ul>
+ <p>
+ NetworkAddress service is registered with the service registry for each
+ available IP address. When associated IP addresses are deleted, or the
+ network interface to which the IP address is bound becomes unavailable, the
+ NetworkAddress service is unregistered. When the associated IP address
+ changes, NetworkAddress service is updated. The user bundle can detect the
+ change of IP address by monitoring the registration or unregistering,
+ updating of NetworkAddress service. Because IP addresses are bound to the
+ network interface, if any, Service PID of the associated NetworkAdapter
+ service and its network interface type are set to service property.
+ NetworkAdapter service MUST be registered after the all associated
+ NetworkAddress services are registered. On the other hand, when unregistering
+ services, after associated NetworkAdapter service is unregistered,
+ NetworkAddress of all related services are unregistered.</p>
+   </description>
+<ThreadSafe></ThreadSafe><author>@author $Id: 8a0613ef45629927ec3b0da834273511e05521da $</author>
+    <method name='getNetworkAdapterType' fqn='org.osgi.service.networkadapter.NetworkAddress.getNetworkAdapterType' qn='NetworkAddress.getNetworkAdapterType()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the network interface type of "networkAdapter.type" service
+ property value.
+   </lead>
+   <description>
+Returns the network interface type of "networkAdapter.type" service
+ property value.
+   </description>
+
+
+<return>Network Interface Type, or null if "networkAdapter.type" service
+         property value is empty.</return>
+
+
+
+     </method>
+    <method name='getIpAddressVersion' fqn='org.osgi.service.networkadapter.NetworkAddress.getIpAddressVersion' qn='NetworkAddress.getIpAddressVersion()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the IP address version of "ipaddress.version" service property
+ value.
+   </lead>
+   <description>
+Returns the IP address version of "ipaddress.version" service property
+ value.
+   </description>
+
+
+<return>IP Address Version, or null if "ipaddress.version" service
+         property value is empty.</return>
+
+
+
+     </method>
+    <method name='getIpAddressScope' fqn='org.osgi.service.networkadapter.NetworkAddress.getIpAddressScope' qn='NetworkAddress.getIpAddressScope()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the IP address scope of "ipaddress.scope" service property value.
+   </lead>
+   <description>
+Returns the IP address scope of "ipaddress.scope" service property value.
+   </description>
+
+
+<return>IP Address Scope, or null if "ipaddress.scope" service property
+         value is empty.</return>
+
+
+
+     </method>
+    <method name='getIpAddress' fqn='org.osgi.service.networkadapter.NetworkAddress.getIpAddress' qn='NetworkAddress.getIpAddress()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the IP address of "ipaddress" service property value.
+   </lead>
+   <description>
+Returns the IP address of "ipaddress" service property value.
+   </description>
+
+
+<return>IP Address string, or null if "ipaddress" service property value
+         is empty.</return>
+
+
+
+     </method>
+    <method name='getInetAddress' fqn='org.osgi.service.networkadapter.NetworkAddress.getInetAddress' qn='NetworkAddress.getInetAddress()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='InetAddress' qualifiedTypeName='java.net.InetAddress' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the InetAddress object of this IP address.
+   </lead>
+   <description>
+Returns the InetAddress object of this IP address.
+ <p>
+ Returned object is created from "ipaddress" service property value.</p>
+   </description>
+
+
+<return>InetAddress, or null if "ipaddress" service property value is
+         empty.</return>
+
+
+
+     </method>
+    <method name='getSubnetMaskLength' fqn='org.osgi.service.networkadapter.NetworkAddress.getSubnetMaskLength' qn='NetworkAddress.getSubnetMaskLength()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='int' qualifiedTypeName='int' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the "subnetmask.length" service property value.
+   </lead>
+   <description>
+Returns the "subnetmask.length" service property value.
+   </description>
+
+
+<return>Subnet Mask Length(IPv4) or Prefix Length(IPv6), or -1 if
+         "subnetmask.length" service property value is empty.</return>
+
+
+
+     </method>
+    <method name='getNetworkAdapterPid' fqn='org.osgi.service.networkadapter.NetworkAddress.getNetworkAdapterPid' qn='NetworkAddress.getNetworkAdapterPid()' package='org.osgi.service.networkadapter' modifiers='public abstract' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the "networkadapter.pid" service property value.
+   </lead>
+   <description>
+Returns the "networkadapter.pid" service property value.
+   </description>
+
+
+<return>Service ID of the interface information service to which it
+         belongs, or null if "networkadapter.pid" service property value
+         is empty.</return>
+
+
+
+     </method>
+    <field name='EMPTY_INTEGER' fqn='org.osgi.service.networkadapter.NetworkAddress.EMPTY_INTEGER' qn='NetworkAddress.EMPTY_INTEGER' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+The value integer of service property, when information is not available.
+   </lead>
+   <description>
+The value integer of service property, when information is not available.
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_TYPE' fqn='org.osgi.service.networkadapter.NetworkAddress.NETWORKADAPTER_TYPE' qn='NetworkAddress.NETWORKADAPTER_TYPE' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.type"'>
+   <lead>
+The key string of "networkAdapter.type" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.type" service property. Network
+ Interface Type is specified.
+   </description>
+
+     </field>
+    <field name='IPADDRESS_VERSION' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_VERSION' qn='NetworkAddress.IPADDRESS_VERSION' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"ipAddress.version"'>
+   <lead>
+The key string of "ipAddress.version" service property.
+   </lead>
+   <description>
+The key string of "ipAddress.version" service property. IP Address
+ version is specified.
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE' qn='NetworkAddress.IPADDRESS_SCOPE' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"ipAddress.scope"'>
+   <lead>
+The key string of "ipAddress.scope" service property.
+   </lead>
+   <description>
+The key string of "ipAddress.scope" service property. IP Address scope is
+ specified.
+   </description>
+
+     </field>
+    <field name='IPADDRESS' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS' qn='NetworkAddress.IPADDRESS' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"ipAddress"'>
+   <lead>
+The key string of "ipAddress" service property.
+   </lead>
+   <description>
+The key string of "ipAddress" service property. IP Address is specified.
+   </description>
+
+     </field>
+    <field name='SUBNETMASK_LENGTH' fqn='org.osgi.service.networkadapter.NetworkAddress.SUBNETMASK_LENGTH' qn='NetworkAddress.SUBNETMASK_LENGTH' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"subnetmask.length"'>
+   <lead>
+The key string of "subnetmask.length" service property.
+   </lead>
+   <description>
+The key string of "subnetmask.length" service property.
+ <p>
+ Subnet Mask Length(IPv4) or Prefix Length(IPv6) is specified.
+ {@link #EMPTY_INTEGER} if no length is available.</p>
+   </description>
+
+     </field>
+    <field name='NETWORKADAPTER_PID' fqn='org.osgi.service.networkadapter.NetworkAddress.NETWORKADAPTER_PID' qn='NetworkAddress.NETWORKADAPTER_PID' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"networkAdapter.pid"'>
+   <lead>
+The key string of "networkAdapter.pid" service property.
+   </lead>
+   <description>
+The key string of "networkAdapter.pid" service property.
+ <p>
+ Service PID of the interface information service to which it belongs is
+ specified.</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_VERSION_4' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_VERSION_4' qn='NetworkAddress.IPADDRESS_VERSION_4' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"IPV4"'>
+   <lead>
+The string of IP address version which means IP address version 4.
+   </lead>
+   <description>
+The string of IP address version which means IP address version 4.
+   </description>
+
+     </field>
+    <field name='IPADDRESS_VERSION_6' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_VERSION_6' qn='NetworkAddress.IPADDRESS_VERSION_6' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"IPV6"'>
+   <lead>
+The string of IP address version which means IP address version 6.
+   </lead>
+   <description>
+The string of IP address version which means IP address version 6.
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_GLOBAL' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_GLOBAL' qn='NetworkAddress.IPADDRESS_SCOPE_GLOBAL' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"GLOBAL"'>
+   <lead>
+The string of IP address scope which means global address.
+   </lead>
+   <description>
+The string of IP address scope which means global address.
+ <p>
+ The global address is defined as the address other than the address
+ defined in the RFC6890.</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_PRIVATE_USE' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_PRIVATE_USE' qn='NetworkAddress.IPADDRESS_SCOPE_PRIVATE_USE' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"PRIVATE_USE"'>
+   <lead>
+The string of IP address scope which means "Private-Use Networks".
+   </lead>
+   <description>
+The string of IP address scope which means "Private-Use Networks".
+ <p>
+ See RFC6890 for the definition of "Private-Use Networks".</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_LOOPBACK' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_LOOPBACK' qn='NetworkAddress.IPADDRESS_SCOPE_LOOPBACK' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"LOOPBACK"'>
+   <lead>
+The string of IP address scope which means "Loopback".
+   </lead>
+   <description>
+The string of IP address scope which means "Loopback".
+ <p>
+ See RFC6890 for the definition of "Loopback".</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_LINKLOCAL' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_LINKLOCAL' qn='NetworkAddress.IPADDRESS_SCOPE_LINKLOCAL' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"LINKLOCAL"'>
+   <lead>
+The string of IP address scope which means "Link Local".
+   </lead>
+   <description>
+The string of IP address scope which means "Link Local".
+ <p>
+ See RFC6890 for the definition of "Link Local".</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_UNIQUE_LOCAL' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_UNIQUE_LOCAL' qn='NetworkAddress.IPADDRESS_SCOPE_UNIQUE_LOCAL' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"UNIQUE_LOCAL"'>
+   <lead>
+The string of IP address scope which means "Unique-Local".
+   </lead>
+   <description>
+The string of IP address scope which means "Unique-Local".
+ <p>
+ See RFC6890 for the definition of "Unique-Local".</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_UNSPECIFIED' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_UNSPECIFIED' qn='NetworkAddress.IPADDRESS_SCOPE_UNSPECIFIED' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"UNSPECIFIED"'>
+   <lead>
+The string of IP address scope which means "Unspecified Address".
+   </lead>
+   <description>
+The string of IP address scope which means "Unspecified Address".
+ <p>
+ See RFC6890 for the definition of "Unspecified Address".</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_HOST' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_HOST' qn='NetworkAddress.IPADDRESS_SCOPE_HOST' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"HOST"'>
+   <lead>
+The string of IP address scope which means "This host on this network".
+   </lead>
+   <description>
+The string of IP address scope which means "This host on this network".
+ <p>
+ See RFC6890 for the definition of "This host on this network".</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_SHARED' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_SHARED' qn='NetworkAddress.IPADDRESS_SCOPE_SHARED' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"SHARED"'>
+   <lead>
+The string of IP address scope which means "Shared Address Space".
+   </lead>
+   <description>
+The string of IP address scope which means "Shared Address Space".
+ <p>
+ See RFC6890 for the definition of "Shared Address Space".</p>
+   </description>
+
+     </field>
+    <field name='IPADDRESS_SCOPE_LINKED_SCOPED_UNICAST' fqn='org.osgi.service.networkadapter.NetworkAddress.IPADDRESS_SCOPE_LINKED_SCOPED_UNICAST' qn='NetworkAddress.IPADDRESS_SCOPE_LINKED_SCOPED_UNICAST' package='org.osgi.service.networkadapter' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"LINKED_SCOPED_UNICAST"'>
+   <lead>
+The string of IP address scope which means "Linked-Scoped Unicast".
+   </lead>
+   <description>
+The string of IP address scope which means "Linked-Scoped Unicast".
+ <p>
+ See RFC6890 for the definition of "Linked-Scoped Unicast".</p>
+   </description>
+
+     </field>
+  </class>
+  </package>
+</top>

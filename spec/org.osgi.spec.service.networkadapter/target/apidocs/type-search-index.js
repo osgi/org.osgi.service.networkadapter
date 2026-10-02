@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.osgi.service.networkadapter","l":"NetworkAdapter"},{"p":"org.osgi.service.networkadapter","l":"NetworkAddress"}];updateSearchResults();

@@ -1,0 +1,3 @@
+org/osgi/service/networkadapter/package-info.class
+org/osgi/service/networkadapter/NetworkAdapter.class
+org/osgi/service/networkadapter/NetworkAddress.class

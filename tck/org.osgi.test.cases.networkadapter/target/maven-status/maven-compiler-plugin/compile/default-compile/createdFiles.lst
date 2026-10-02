@@ -1,0 +1,7 @@
+org/osgi/test/cases/networkadapter/util/TestServiceListener.class
+org/osgi/test/cases/networkadapter/junit/SignatureTestCase.class
+org/osgi/test/cases/networkadapter/util/NetworkIfTestUtil.class
+org/osgi/test/cases/networkadapter/junit/NetworkAdapterTestCase.class
+org/osgi/test/cases/networkadapter/junit/NetworkIfTestCase.class
+org/osgi/test/cases/networkadapter/util/NetworkTestProxy.class
+org/osgi/test/cases/networkadapter/junit/NetworkAddressTestCase.class

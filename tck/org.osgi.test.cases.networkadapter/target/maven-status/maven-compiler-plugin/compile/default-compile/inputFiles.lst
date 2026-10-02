@@ -1,0 +1,7 @@
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.test.cases.networkadapter/src/main/java/org/osgi/test/cases/networkadapter/junit/NetworkAdapterTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.test.cases.networkadapter/src/main/java/org/osgi/test/cases/networkadapter/junit/NetworkAddressTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.test.cases.networkadapter/src/main/java/org/osgi/test/cases/networkadapter/junit/NetworkIfTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.test.cases.networkadapter/src/main/java/org/osgi/test/cases/networkadapter/junit/SignatureTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.test.cases.networkadapter/src/main/java/org/osgi/test/cases/networkadapter/util/NetworkIfTestUtil.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.test.cases.networkadapter/src/main/java/org/osgi/test/cases/networkadapter/util/NetworkTestProxy.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.test.cases.networkadapter/src/main/java/org/osgi/test/cases/networkadapter/util/TestServiceListener.java
