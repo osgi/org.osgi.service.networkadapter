@@ -1,0 +1,9 @@
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/Activator.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/Commands.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/NetworkAdapterImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/NetworkAddressImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/NetworkIfData.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/NetworkIfManager.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/NetworkIfTracker.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/NetworkIfUtil.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.networkadapter/tck/org.osgi.impl.service.networkadapter/src/main/java/org/osgi/impl/service/networkadapter/TestStepImpl.java
