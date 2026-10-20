@@ -18,6 +18,13 @@
 
 package org.osgi.test.cases.networkadapter.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
@@ -25,56 +32,60 @@ import org.osgi.service.networkadapter.NetworkAdapter;
 import org.osgi.service.networkadapter.NetworkAddress;
 import org.osgi.test.cases.networkadapter.util.NetworkTestProxy;
 import org.osgi.test.cases.networkadapter.util.TestServiceListener;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
-import org.osgi.test.support.step.TestStepProxy;
+import org.osgi.test.common.annotation.InjectBundleContext;
+import org.osgi.tck.step.TestStepProxy;
 
-public class NetworkIfTestCase extends DefaultTestBundleControl {
+public class NetworkIfTestCase {
+
+	@InjectBundleContext
+	BundleContext		context;
     private NetworkTestProxy	testProxy;
 
-    @Override
-	protected void setUp() throws Exception {
-        this.testProxy = new NetworkTestProxy(new TestStepProxy(getContext()));
+	@BeforeEach
+	public void setUp() throws Exception {
+        this.testProxy = new NetworkTestProxy(new TestStepProxy(context));
     }
 
-    @Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() throws Exception {
         this.testProxy.close();
     }
 
     /**
      * Tests NetworkAdapter add operation.
      */
+    @Test
     public void testAddAction01() {
         String[] ids = null;
         try {
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.REGISTERED);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.REGISTERED);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
             String command = "addNetworkAdapter";
             String message = "[TEST-AA01] Add a no-address network adapter.";
             String[] parameters = new String[]{"no-address"};
             ids = testProxy.executeTestStep(command, message, parameters);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the number of the services.
-            assertEquals("Only one NetworkAdapter service registerd event is expected.", 1, adapterListener.size());
-            assertEquals("Zero NetworkAddress service registered event is expected.", 0, addressListener.size());
+            assertThat(adapterListener.size()).as("Only one NetworkAdapter service registerd event is expected.").isOne();
+            assertThat(addressListener.size()).as("Zero NetworkAddress service registered event is expected.").isZero();
 
             // Confirmation of the service property.
             ServiceReference< ? > adapterRef = adapterListener.get(0);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_TYPE, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_TYPE) instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_DISPLAYNAME, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_DISPLAYNAME) instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_NAME, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_NAME) instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS) instanceof byte[]);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_UP, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_UP) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_SUBINTERFACE, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_SUBINTERFACE) instanceof String[]);
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_TYPE) instanceof String).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_TYPE).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_DISPLAYNAME) instanceof String).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_DISPLAYNAME).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_NAME) instanceof String).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_NAME).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS) instanceof byte[]).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_UP) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_UP).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_SUBINTERFACE) instanceof String[]).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_SUBINTERFACE).isTrue();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,6 +102,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV4<br>
      * scope: HOST<br>
      */
+    @Test
     public void testAddAction02() {
 
         String message = "[TEST-AA02] Add an ipv4-host network adapter.";
@@ -104,6 +116,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV4<br>
      * scope: PRIVATE_USE<br>
      */
+    @Test
     public void testAddAction03() {
 
         String message = "[TEST-AA03] Add an ipv4-private-use network adapter.";
@@ -117,6 +130,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV4<br>
      * scope: SHARED<br>
      */
+    @Test
     public void testAddAction04() {
 
         String message = "[TEST-AA04] Add an ipv4-shared network adapter.";
@@ -130,6 +144,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV4<br>
      * scope: LOOPBACK<br>
      */
+    @Test
     public void testAddAction05() {
 
         String message = "[TEST-AA05] Add an ipv4-loopback network adapter.";
@@ -143,6 +158,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV4<br>
      * scope: LINKLOCAL<br>
      */
+    @Test
     public void testAddAction06() {
 
         String message = "[TEST-AA06] Add an ipv4-linklocal network adapter.";
@@ -156,6 +172,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV4<br>
      * scope: GLOBAL<br>
      */
+    @Test
     public void testAddAction07() {
 
         String message = "[TEST-AA07] Add an ipv4-global network adapter.";
@@ -169,6 +186,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV6<br>
      * scope: LOOPBACK<br>
      */
+    @Test
     public void testAddAction08() {
 
         String message = "[TEST-AA08] Add an ipv6-loopback network adapter.";
@@ -182,6 +200,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV6<br>
      * scope: UNSPECIFIED<br>
      */
+    @Test
     public void testAddAction09() {
 
         String message = "[TEST-AA09] Add an ipv6-unspecified network adapter.";
@@ -195,6 +214,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV6<br>
      * scope: UNIQUE_LOCAL<br>
      */
+    @Test
     public void testAddAction10() {
 
         String message = "[TEST-AA10] Add an ipv6-uniquelocal network adapter.";
@@ -208,6 +228,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV6<br>
      * scope: LINKED_SCOPED_UNICAST<br>
      */
+    @Test
     public void testAddAction11() {
 
         String message = "[TEST-AA11] Add an ipv6-linkedscopedunicast network adapter.";
@@ -221,6 +242,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV6<br>
      * scope: GLOBAL<br>
      */
+    @Test
     public void testAddAction12() {
 
         String message = "[TEST-AA12] Add an ipv6-global network adapter.";
@@ -233,40 +255,40 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
         String[] ids = null;
         try {
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.REGISTERED);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.REGISTERED);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
             String command = "addNetworkAdapter";
             String[] parameters = new String[]{type};
             ids = testProxy.executeTestStep(command, message, parameters);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the number of the services.
-            assertEquals("Only one NetworkAdapter service registered event is expected.", 1, adapterListener.size());
-            assertEquals("Only one NetworkAddress service registered event is expected.", 1, addressListener.size());
+            assertThat(adapterListener.size()).as("Only one NetworkAdapter service registered event is expected.").isOne();
+            assertThat(addressListener.size()).as("Only one NetworkAddress service registered event is expected.").isOne();
 
             // Confirmation of the service property.
             ServiceReference< ? > adapterRef = adapterListener.get(0);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_TYPE, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_TYPE) instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_DISPLAYNAME, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_DISPLAYNAME) instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_NAME, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_NAME) instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS) instanceof byte[]);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_UP, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_UP) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST) instanceof Boolean);
-            assertTrue("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_SUBINTERFACE, adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_SUBINTERFACE) instanceof String[]);
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_TYPE) instanceof String).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_TYPE).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_DISPLAYNAME) instanceof String).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_DISPLAYNAME).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_NAME) instanceof String).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_NAME).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS) instanceof byte[]).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_HARDWAREADDRESS).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_LOOPBACK).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_POINTTOPOINT).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_UP) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_UP).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_IS_VIRTUAL).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST) instanceof Boolean).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_SUPPORTS_MULTICAST).isTrue();
+            assertThat(adapterRef.getProperty(NetworkAdapter.NETWORKADAPTER_SUBINTERFACE) instanceof String[]).as("The following service property is not correct: " + NetworkAdapter.NETWORKADAPTER_SUBINTERFACE).isTrue();
 
             ServiceReference< ? > addressRef = addressListener.get(0);
-            assertTrue("The following service property is not correct: " + NetworkAddress.NETWORKADAPTER_TYPE, addressRef.getProperty(NetworkAddress.NETWORKADAPTER_TYPE) instanceof String);
-            assertEquals("The following service property is not correct: " + NetworkAddress.IPADDRESS_VERSION, version, addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION));
-            assertEquals("The following service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE, scope, addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE));
-            assertTrue("The following service property is not correct: " + NetworkAddress.IPADDRESS, addressRef.getProperty(NetworkAddress.IPADDRESS) instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAddress.SUBNETMASK_LENGTH, addressRef.getProperty(NetworkAddress.SUBNETMASK_LENGTH) instanceof Integer);
-            assertTrue("The following service property is not correct: " + NetworkAddress.NETWORKADAPTER_PID, addressRef.getProperty(NetworkAddress.NETWORKADAPTER_PID) instanceof String);
+            assertThat(addressRef.getProperty(NetworkAddress.NETWORKADAPTER_TYPE) instanceof String).as("The following service property is not correct: " + NetworkAddress.NETWORKADAPTER_TYPE).isTrue();
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION)).as("The following service property is not correct: " + NetworkAddress.IPADDRESS_VERSION).isEqualTo(version);
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE)).as("The following service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE).isEqualTo(scope);
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS) instanceof String).as("The following service property is not correct: " + NetworkAddress.IPADDRESS).isTrue();
+            assertThat(addressRef.getProperty(NetworkAddress.SUBNETMASK_LENGTH) instanceof Integer).as("The following service property is not correct: " + NetworkAddress.SUBNETMASK_LENGTH).isTrue();
+            assertThat(addressRef.getProperty(NetworkAddress.NETWORKADAPTER_PID) instanceof String).as("The following service property is not correct: " + NetworkAddress.NETWORKADAPTER_PID).isTrue();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -287,22 +309,23 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV6<br>
      * scope: UNIQUE_LOCAL<br>
      */
+    @Test
     public void testAddAction13() {
         String[] ids = null;
         try {
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.REGISTERED);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             String command = "addNetworkAdapter";
             String message = "[TEST-AA13] Add an ipv4-private-use network adapter.";
             String[] parameters = new String[]{"ipv4-private-use"};
             ids = testProxy.executeTestStep(command, message, parameters);
 
-            getContext().removeServiceListener(adapterListener);
+            context.removeServiceListener(adapterListener);
             adapterListener.clear();
 
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.REGISTERED);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
 
             // Addition of the IP address information
             command = "addNetworkAddress";
@@ -310,17 +333,17 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             String[] parameters1 = new String[]{"ipv6-uniquelocal", ids[0]};
             testProxy.executeTestStep(command, message, parameters1);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the number of the services.
-            assertEquals("Only zero NetworkAdapter service registered event is expected.", 0, adapterListener.size());
-            assertEquals("Only one NetworkAddress service registered event is expected.", 1, addressListener.size());
+            assertThat(adapterListener.size()).as("Only zero NetworkAdapter service registered event is expected.").isZero();
+            assertThat(addressListener.size()).as("Only one NetworkAddress service registered event is expected.").isOne();
 
             // Confirmation of the service property.
             ServiceReference< ? > addressRef = addressListener.get(0);
-            assertEquals("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_VERSION, NetworkAddress.IPADDRESS_VERSION_6, addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION));
-            assertEquals("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE, NetworkAddress.IPADDRESS_SCOPE_UNIQUE_LOCAL, addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE));
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION)).as("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_VERSION).isEqualTo(NetworkAddress.IPADDRESS_VERSION_6);
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE)).as("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE).isEqualTo(NetworkAddress.IPADDRESS_SCOPE_UNIQUE_LOCAL);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -341,6 +364,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV4<br>
      * scope: PRIVATE_USE<br>
      */
+    @Test
     public void testModifyAction01() {
         String[] ids = null;
         try {
@@ -350,9 +374,9 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             ids = testProxy.executeTestStep(command, message, parameters);
 
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.MODIFIED);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.MODIFIED);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
 
             // Change of the IP address information
             command = "modifyNetworkAddress";
@@ -360,17 +384,17 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             parameters = new String[]{"ipv4-private-use_2", ids[1]};
             testProxy.executeTestStep(command, message, parameters);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the number of the services.
-            assertEquals("Only zero NetworkAdapter service modified event is expected.", 0, adapterListener.size());
-            assertEquals("Only one NetworkAddress service modified event is expected.", 1, addressListener.size());
+            assertThat(adapterListener.size()).as("Only zero NetworkAdapter service modified event is expected.").isZero();
+            assertThat(addressListener.size()).as("Only one NetworkAddress service modified event is expected.").isOne();
 
             // Confirmation of the service property.
             ServiceReference< ? > addressRef = addressListener.get(0);
-            assertEquals("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_VERSION, NetworkAddress.IPADDRESS_VERSION_4, addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION));
-            assertEquals("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE, NetworkAddress.IPADDRESS_SCOPE_PRIVATE_USE, addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE));
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION)).as("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_VERSION).isEqualTo(NetworkAddress.IPADDRESS_VERSION_4);
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE)).as("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE).isEqualTo(NetworkAddress.IPADDRESS_SCOPE_PRIVATE_USE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -391,6 +415,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV4<br>
      * scope: GLOBAL<br>
      */
+    @Test
     public void testModifyAction02() {
         String[] ids = null;
         try {
@@ -400,9 +425,9 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             ids = testProxy.executeTestStep(command, message, parameters);
 
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.MODIFIED);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.MODIFIED);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
 
             // Change of the IP address information
             command = "modifyNetworkAddress";
@@ -410,17 +435,17 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             parameters = new String[]{"ipv4-global", ids[1]};
             testProxy.executeTestStep(command, message, parameters);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the number of the services.
-            assertEquals("Only zero NetworkAdapter service modified event is expected.", 0, adapterListener.size());
-            assertEquals("Only one NetworkAddress service modified event is expected.", 1, addressListener.size());
+            assertThat(adapterListener.size()).as("Only zero NetworkAdapter service modified event is expected.").isZero();
+            assertThat(addressListener.size()).as("Only one NetworkAddress service modified event is expected.").isOne();
 
             // Confirmation of the service property.
             ServiceReference< ? > addressRef = addressListener.get(0);
-            assertEquals("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_VERSION, NetworkAddress.IPADDRESS_VERSION_4, addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION));
-            assertEquals("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE, NetworkAddress.IPADDRESS_SCOPE_GLOBAL, addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE));
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION)).as("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_VERSION).isEqualTo(NetworkAddress.IPADDRESS_VERSION_4);
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE)).as("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE).isEqualTo(NetworkAddress.IPADDRESS_SCOPE_GLOBAL);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -441,6 +466,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
      * version: IPV6<br>
      * scope: UNIQUE_LOCAL<br>
      */
+    @Test
     public void testModifyAction03() {
         String[] ids = null;
         try {
@@ -450,9 +476,9 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             ids = testProxy.executeTestStep(command, message, parameters);
 
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.MODIFIED);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.MODIFIED);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
 
             // Change of the IP address information
             command = "modifyNetworkAddress";
@@ -460,17 +486,17 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             parameters = new String[]{"ipv6-uniquelocal", ids[1]};
             testProxy.executeTestStep(command, message, parameters);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the number of the services.
-            assertEquals("Only zero NetworkAdapter service modified event is expected.", 0, adapterListener.size());
-            assertEquals("Only one NetworkAddress service modified event is expected.", 1, addressListener.size());
+            assertThat(adapterListener.size()).as("Only zero NetworkAdapter service modified event is expected.").isZero();
+            assertThat(addressListener.size()).as("Only one NetworkAddress service modified event is expected.").isOne();
 
             // Confirmation of the service property.
             ServiceReference< ? > addressRef = addressListener.get(0);
-            assertEquals("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_VERSION, NetworkAddress.IPADDRESS_VERSION_6, addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION));
-            assertEquals("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE, NetworkAddress.IPADDRESS_SCOPE_UNIQUE_LOCAL, addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE));
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_VERSION)).as("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_VERSION).isEqualTo(NetworkAddress.IPADDRESS_VERSION_6);
+            assertThat(addressRef.getProperty(NetworkAddress.IPADDRESS_SCOPE)).as("The following NetworkAddress service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE).isEqualTo(NetworkAddress.IPADDRESS_SCOPE_UNIQUE_LOCAL);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -485,6 +511,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
     /**
      * Tests NetworkAddress remove operation. Two NetworkAddress.
      */
+    @Test
     public void testRemoveAction01() {
         String[] ids = null;
         try {
@@ -499,9 +526,9 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             testProxy.executeTestStep(command, message, parameters1);
 
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.UNREGISTERING);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.UNREGISTERING);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
 
             // Deletion of the IP address information.
             command = "removeNetworkAddress";
@@ -509,12 +536,12 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             String[] parameters2 = new String[]{ids[1]};
             testProxy.executeTestStep(command, message, parameters2);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the service unregistration.
-            assertEquals("Only zero NetworkAdapter service unregistering event is expected.", 0, adapterListener.size());
-            assertEquals("Only one NetworkAddress service unregistering event is expected.", 1, addressListener.size());
+            assertThat(adapterListener.size()).as("Only zero NetworkAdapter service unregistering event is expected.").isZero();
+            assertThat(addressListener.size()).as("Only one NetworkAddress service unregistering event is expected.").isOne();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -529,6 +556,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
     /**
      * Tests NetworkAddress remove operation. One NetworkAddress.
      */
+    @Test
     public void testRemoveAction02() {
         String[] ids = null;
         try {
@@ -538,9 +566,9 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             ids = testProxy.executeTestStep(command, message, parameters);
 
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.UNREGISTERING);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.UNREGISTERING);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
 
             // Deletion of the IP address information.
             command = "removeNetworkAddress";
@@ -548,12 +576,12 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             String[] parameters1 = new String[]{ids[1]};
             testProxy.executeTestStep(command, message, parameters1);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the service unregistration.
-            assertEquals("Only zero NetworkAdapter service unregistering event is expected.", 0, adapterListener.size());
-            assertEquals("Only one NetworkAddress service unregistering event is expected.", 1, addressListener.size());
+            assertThat(adapterListener.size()).as("Only zero NetworkAdapter service unregistering event is expected.").isZero();
+            assertThat(addressListener.size()).as("Only one NetworkAddress service unregistering event is expected.").isOne();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -568,6 +596,7 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
     /**
      * Tests NetworkAdapter remove operation.
      */
+    @Test
     public void testRemoveAction03() {
         String[] ids = null;
         try {
@@ -577,9 +606,9 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             ids = testProxy.executeTestStep(command, message, parameters);
 
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.UNREGISTERING);
-            getContext().addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.UNREGISTERING);
-            getContext().addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" + Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
 
             // Deletion of the IP address information.
             command = "removeNetworkAdapter";
@@ -587,12 +616,12 @@ public class NetworkIfTestCase extends DefaultTestBundleControl {
             String[] parameters1 = new String[]{ids[0]};
             testProxy.executeTestStep(command, message, parameters1);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             // Confirmation of the service unregistration.
-            assertEquals("Only one NetworkAdapter service unregistering event is expected.", 1, adapterListener.size());
-            assertEquals("Only one NetworkAddress service unregistering event is expected.", 1, addressListener.size());
+            assertThat(adapterListener.size()).as("Only one NetworkAdapter service unregistering event is expected.").isOne();
+            assertThat(addressListener.size()).as("Only one NetworkAddress service unregistering event is expected.").isOne();
 
         } catch (Exception e) {
             e.printStackTrace();
