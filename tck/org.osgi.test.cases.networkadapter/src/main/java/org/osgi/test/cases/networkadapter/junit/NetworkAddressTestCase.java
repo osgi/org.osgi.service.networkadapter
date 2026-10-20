@@ -17,8 +17,15 @@
  *******************************************************************************/
 package org.osgi.test.cases.networkadapter.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.net.InetAddress;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
@@ -26,39 +33,43 @@ import org.osgi.service.networkadapter.NetworkAdapter;
 import org.osgi.service.networkadapter.NetworkAddress;
 import org.osgi.test.cases.networkadapter.util.NetworkTestProxy;
 import org.osgi.test.cases.networkadapter.util.TestServiceListener;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
-import org.osgi.test.support.step.TestStepProxy;
+import org.osgi.test.common.annotation.InjectBundleContext;
+import org.osgi.tck.step.TestStepProxy;
 
-public class NetworkAddressTestCase extends DefaultTestBundleControl {
+public class NetworkAddressTestCase {
+
+	@InjectBundleContext
+	BundleContext		context;
     private NetworkTestProxy testProxy;
 
-    @Override
-	protected void setUp() throws Exception {
-        this.testProxy = new NetworkTestProxy(new TestStepProxy(getContext()));
+	@BeforeEach
+	public void setUp() throws Exception {
+        this.testProxy = new NetworkTestProxy(new TestStepProxy(context));
     }
 
-    @Override
-	protected void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() throws Exception {
         this.testProxy.close();
     }
 
     /**
      * Tests NetworkAddress of the interface that starts.
      */
+    @Test
     public void testNetworkAddress01() {
         String[] ids = null;
         try {
             TestServiceListener adapterListener = new TestServiceListener(ServiceEvent.REGISTERED);
-            getContext().addServiceListener(adapterListener, "(" +  Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
+            context.addServiceListener(adapterListener, "(" +  Constants.OBJECTCLASS + "=" + NetworkAdapter.class.getName() + ")");
             TestServiceListener addressListener = new TestServiceListener(ServiceEvent.REGISTERED);
-            getContext().addServiceListener(addressListener, "(" +  Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
+            context.addServiceListener(addressListener, "(" +  Constants.OBJECTCLASS + "=" + NetworkAddress.class.getName() + ")");
             String command = "addNetworkAdapter";
             String message = "[TEST-ADD01] Add an up network adapter.";
             String[] parameters = new String[]{"up"};
             ids = testProxy.executeTestStep(command, message, parameters);
 
-            getContext().removeServiceListener(adapterListener);
-            getContext().removeServiceListener(addressListener);
+            context.removeServiceListener(adapterListener);
+            context.removeServiceListener(addressListener);
 
             ServiceReference< ? > ref = addressListener.get(0);
             Object type = ref.getProperty(NetworkAddress.NETWORKADAPTER_TYPE);
@@ -68,20 +79,20 @@ public class NetworkAddressTestCase extends DefaultTestBundleControl {
             Object subnetmask = ref.getProperty(NetworkAddress.SUBNETMASK_LENGTH);
             Object pid = ref.getProperty(NetworkAddress.NETWORKADAPTER_PID);
 
-            assertTrue("The following service property is not correct: " + NetworkAddress.NETWORKADAPTER_TYPE, type instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAddress.IPADDRESS_VERSION, version instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE, scope instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAddress.IPADDRESS, ipAddress instanceof String);
-            assertTrue("The following service property is not correct: " + NetworkAddress.SUBNETMASK_LENGTH, subnetmask instanceof Integer);
-            assertTrue("The following service property is not correct: " + NetworkAddress.NETWORKADAPTER_PID, pid instanceof String);
+            assertThat(type instanceof String).as("The following service property is not correct: " + NetworkAddress.NETWORKADAPTER_TYPE).isTrue();
+            assertThat(version instanceof String).as("The following service property is not correct: " + NetworkAddress.IPADDRESS_VERSION).isTrue();
+            assertThat(scope instanceof String).as("The following service property is not correct: " + NetworkAddress.IPADDRESS_SCOPE).isTrue();
+            assertThat(ipAddress instanceof String).as("The following service property is not correct: " + NetworkAddress.IPADDRESS).isTrue();
+            assertThat(subnetmask instanceof Integer).as("The following service property is not correct: " + NetworkAddress.SUBNETMASK_LENGTH).isTrue();
+            assertThat(pid instanceof String).as("The following service property is not correct: " + NetworkAddress.NETWORKADAPTER_PID).isTrue();
 
-            NetworkAddress networkAddress = (NetworkAddress) getContext().getService(addressListener.get(0));
-            assertEquals("The following NetworkAddress information does not match: "+ NetworkAddress.NETWORKADAPTER_TYPE, type, networkAddress.getNetworkAdapterType());
-            assertEquals("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS_VERSION, version, networkAddress.getIpAddressVersion());
-            assertEquals("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS_SCOPE, scope, networkAddress.getIpAddressScope());
-            assertEquals("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS, ipAddress, networkAddress.getIpAddress());
-            assertEquals("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS, InetAddress.getByName((String)ipAddress), networkAddress.getInetAddress());
-            assertEquals("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS, ((Integer)subnetmask).intValue(), networkAddress.getSubnetMaskLength());
+            NetworkAddress networkAddress = (NetworkAddress) context.getService(addressListener.get(0));
+            assertThat(networkAddress.getNetworkAdapterType()).as("The following NetworkAddress information does not match: "+ NetworkAddress.NETWORKADAPTER_TYPE).isEqualTo(type);
+            assertThat(networkAddress.getIpAddressVersion()).as("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS_VERSION).isEqualTo(version);
+            assertThat(networkAddress.getIpAddressScope()).as("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS_SCOPE).isEqualTo(scope);
+            assertThat(networkAddress.getIpAddress()).as("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS).isEqualTo(ipAddress);
+            assertThat(networkAddress.getInetAddress()).as("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS).isEqualTo(InetAddress.getByName((String)ipAddress));
+            assertThat(networkAddress.getSubnetMaskLength()).as("The following NetworkAddress information does not match: "+ NetworkAddress.IPADDRESS).isEqualTo(((Integer)subnetmask).intValue());
 
         } catch (Exception e) {
             e.printStackTrace();
